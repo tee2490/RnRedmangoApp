@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { menuItemModel } from "../../interfaces";
 import MenuItemCard from "./MenuItemCard";
+import styles from "./MenuItemList.style";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
@@ -17,12 +18,16 @@ export default function MenuItemList() {
   }, []);
 
   return (
-    <View>
-      {menuItems.length > 0 &&
-        menuItems.map((menuItem, index) => (
-          <MenuItemCard menuItem={menuItem} key={index} />
-        ))}
-    </View>
+    <View style={styles.container}>
+    <FlatList
+      data={menuItems}
+      numColumns={2}
+      keyExtractor={(item)=>item.id.toString()}
+      renderItem={({ item }) => <MenuItemCard menuItem={item} />}
+      contentContainerStyle={styles.container}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+    />
+  </View>
   );
 }
 

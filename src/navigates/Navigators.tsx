@@ -29,6 +29,7 @@ export default function Navigators() {
             },
             tabBarActiveTintColor: "tomato",
             tabBarInactiveTintColor: "gray",
+            headerShown:false,
           })}
         >
           <Tab.Screen name="HOME" component={HomeScreen} />

@@ -5,14 +5,18 @@ import styles from './MenuItemCard.style';
 import { baseUrl } from '../../common/SD';
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from '../../common';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigates';
 
 interface Props {
   menuItem: menuItemModel;
 }
 
 export default function MenuItemCard(item: Props) {
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+  
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity onPress={() => navigate('MenuItemDetailScreen',{item : item.menuItem})}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Navigators } from './src/navigates';
+import { MainNavigators } from './src/navigates';
 import { Text } from 'react-native';
 import { useFonts } from 'expo-font';
 
@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <>
-      <Navigators/>
+      <MainNavigators/>
       <StatusBar style="dark" />
     </>
   );

@@ -1,3 +1,4 @@
 import HomeScreen from "./HomeScreen";
+import MenuItemDetailScreen from "./MenuItemDetailScreen";
 
-export { HomeScreen};
+export { HomeScreen,MenuItemDetailScreen};

@@ -1,20 +1,22 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen } from "../screen";
+import StackNavigation from "./StackNavigation";
+import { NavigationContainer } from "@react-navigation/native";
+import { SIZES } from "../common";
 
 const Tab = createBottomTabNavigator();
 
-export default function Navigators() {
+export default function BottomTabNavigation() {
   return (
-    <View style={styles.container}>
-      <NavigationContainer>
+    <NavigationContainer>
+      <View style={styles.container}>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ color, size }) => {
-              let iconName:any;
+              let iconName: any;
 
               if (route.name === "HOME") {
                 iconName = "home";
@@ -29,15 +31,15 @@ export default function Navigators() {
             },
             tabBarActiveTintColor: "tomato",
             tabBarInactiveTintColor: "gray",
-            headerShown:false,
+            headerShown: false,
           })}
         >
-          <Tab.Screen name="HOME" component={HomeScreen} />
+          <Tab.Screen name="HOME" component={StackNavigation} />
           <Tab.Screen name="CART" component={HomeScreen} />
           <Tab.Screen name="SETTING" component={HomeScreen} />
         </Tab.Navigator>
-      </NavigationContainer>
-    </View>
+      </View>
+    </NavigationContainer>
   );
 }
 
@@ -46,5 +48,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
+    paddingTop:SIZES.xLarge,
   },
 });

@@ -5,7 +5,6 @@ import { COLORS, SIZES } from "../../common";
 const styles = StyleSheet.create({
     container:{
         alignItems: "center",
-        paddingTop: SIZES.xxLarge,
         paddingLeft: SIZES.small/2,
         backgroundColor: COLORS.white
     },

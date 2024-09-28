@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { menuItemModel } from "../../interfaces";
+import MenuItemCard from "./MenuItemCard";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
@@ -17,7 +18,10 @@ export default function MenuItemList() {
 
   return (
     <View>
-      <Text>MenuItemList</Text>
+      {menuItems.length > 0 &&
+        menuItems.map((menuItem, index) => (
+          <MenuItemCard menuItem={menuItem} key={index} />
+        ))}
     </View>
   );
 }

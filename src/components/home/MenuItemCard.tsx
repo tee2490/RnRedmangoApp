@@ -1,10 +1,15 @@
 import { Text, View } from 'react-native'
 import React from 'react'
+import { menuItemModel } from '../../interfaces';
 
-export default function MenuItemCard() {
+interface Props {
+  menuItem: menuItemModel;
+}
+
+export default function MenuItemCard(props: Props) {
   return (
     <View>
-      <Text>MenuItemCard</Text>
+      <Text>{props.menuItem.name}</Text>
     </View>
   )
 }

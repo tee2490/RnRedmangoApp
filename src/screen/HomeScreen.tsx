@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
+import { MenuItemList } from '../components/home'
 
 export default function HomeScreen() {
   return (
     <View>
-      <Text>HomeScreen</Text>
+      <MenuItemList />
     </View>
   )
 }
 
-const styles = StyleSheet.create({})

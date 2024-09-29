@@ -16,7 +16,7 @@ export default function MenuItemCard(item: Props) {
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   
   return (
-    <TouchableOpacity onPress={() => navigate('MenuItemDetailScreen',{item : item.menuItem})}>
+    <TouchableOpacity onPress={() => navigate('MenuItemDetailScreen',{id : item.menuItem.id})}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image

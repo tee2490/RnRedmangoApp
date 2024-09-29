@@ -6,21 +6,26 @@ import styles from "./MenuItemList.style";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { FloatingAction } from "react-native-floating-action";
-import { COLORS } from "../../common";
+import { COLORS, MainLoader } from "../../common";
+import { useDispatch } from "react-redux";
+import { useGetMenuItemsQuery } from "../../redux/apis/menuItemApi";
+import { setMenuItem } from "../../redux/menuItemSlice";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
   const flatListRef = useRef<FlatList>(null);
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetMenuItemsQuery(null);
 
   useEffect(() => {
-    fetch("https://4480-202-28-123-199.ngrok-free.app/api/MenuItem")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setMenuItems(data.result);
-      })
-      .catch(() => console.log("error"));
-  }, []);
+    if (!isLoading) {
+      dispatch(setMenuItem(data.result));
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <MainLoader/>
+  }
 
   const actions = [
     {
@@ -57,7 +62,7 @@ export default function MenuItemList() {
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
-        data={menuItems}
+        data={data.result}
         numColumns={2}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MenuItemCard menuItem={item} />}

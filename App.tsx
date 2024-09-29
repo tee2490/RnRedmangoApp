@@ -1,7 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import { MainNavigators } from './src/navigates';
-import { Text } from 'react-native';
-import { useFonts } from 'expo-font';
+import { StatusBar } from "expo-status-bar";
+import { MainNavigators } from "./src/navigates";
+import { Text } from "react-native";
+import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
+import store from "./src/redux/store";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -20,10 +22,9 @@ export default function App() {
   }
 
   return (
-    <>
-      <MainNavigators/>
+    <Provider store={store}>
+      <MainNavigators />
       <StatusBar style="dark" />
-    </>
+    </Provider>
   );
 }
-

@@ -4,6 +4,7 @@ import { Text } from "react-native";
 import { useFonts } from "expo-font";
 import { Provider } from "react-redux";
 import store from "./src/redux/store";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -21,10 +22,21 @@ export default function App() {
     return <Text>Font loading...</Text>;
   }
 
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: "tomato",
+      secondary: "yellow",
+    },
+  };
+
   return (
     <Provider store={store}>
-      <MainNavigators />
-      <StatusBar style="dark" />
+      <PaperProvider theme={theme}>
+        <MainNavigators />
+        <StatusBar style="dark" />
+      </PaperProvider>
     </Provider>
   );
 }

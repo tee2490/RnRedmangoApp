@@ -1,4 +1,4 @@
-import { Alert, FlatList, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { menuItemModel } from "../../interfaces";
 import MenuItemCard from "./MenuItemCard";
@@ -10,24 +10,21 @@ import { COLORS, MainLoader } from "../../common";
 import { useDispatch } from "react-redux";
 import { useGetMenuItemsQuery } from "../../redux/apis/menuItemApi";
 import { setMenuItem } from "../../redux/menuItemSlice";
+import { FormDialog } from "../../ui";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const dispatch = useDispatch();
   const { data, isLoading, isError, error } = useGetMenuItemsQuery(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     if (isError) {
       //ตรวจสอบกรณีเชื่อมต่อกับ backend ผิดพลาด
       const errToString = JSON.stringify(error);
       const errToObject = JSON.parse(errToString);
-      Alert.alert("Warning!!", errToObject.error, [
-        {
-          text: "Close",
-          onPress: () => {},
-        },
-      ]);
+      setMessage(errToObject.error);
       return;
     }
 
@@ -73,6 +70,7 @@ export default function MenuItemList() {
 
   return (
     <View style={styles.container}>
+      {message && <FormDialog message={message} />}
       <FlatList
         ref={flatListRef}
         data={data?.result}

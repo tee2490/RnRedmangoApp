@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { menuItemModel } from "../../interfaces";
 import MenuItemCard from "./MenuItemCard";
@@ -15,16 +15,29 @@ export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetMenuItemsQuery(null);
+  const { data, isLoading, isError, error } = useGetMenuItemsQuery(null);
 
   useEffect(() => {
+    if (isError) {
+      //ตรวจสอบกรณีเชื่อมต่อกับ backend ผิดพลาด
+      const errToString = JSON.stringify(error);
+      const errToObject = JSON.parse(errToString);
+      Alert.alert("Warning!!", errToObject.error, [
+        {
+          text: "Close",
+          onPress: () => {},
+        },
+      ]);
+      return;
+    }
+
     if (!isLoading) {
       dispatch(setMenuItem(data.result));
     }
   }, [isLoading]);
 
   if (isLoading) {
-    return <MainLoader/>
+    return <MainLoader />;
   }
 
   const actions = [
@@ -62,7 +75,7 @@ export default function MenuItemList() {
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
-        data={data.result}
+        data={data?.result}
         numColumns={2}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MenuItemCard menuItem={item} />}

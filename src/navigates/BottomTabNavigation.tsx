@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen } from "../screen";
+import { HomeScreen, ShoppingCartScreen } from "../screen";
 import StackNavigation from "./StackNavigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { SIZES } from "../common";
@@ -51,7 +51,7 @@ export default function BottomTabNavigation() {
           })}
         >
           <Tab.Screen name="HOME" component={StackNavigation} />
-          <Tab.Screen name="CART" component={HomeScreen} />
+          <Tab.Screen name="CART" component={ShoppingCartScreen} />
           <Tab.Screen name="SETTING" component={HomeScreen} />
         </Tab.Navigator>
       </View>

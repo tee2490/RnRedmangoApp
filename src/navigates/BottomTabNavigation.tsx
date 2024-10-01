@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen, ProfileScreen, ShoppingCartScreen } from "../screen";
@@ -16,6 +16,7 @@ import { Badge } from "react-native-paper";
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigation() {
+  const [skip, setSkip] = useState(true);
   const userData: userModel = useSelector(
     (state: RootState) => state.userAuthStore
   );
@@ -23,14 +24,21 @@ export default function BottomTabNavigation() {
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
   );
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id, {
+    skip: skip,
+  });
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data) {
       console.log(data.result);
       dispatch(setShoppingCart(data.result?.cartItems));
     }
   }, [data]);
+
+  useEffect(() => {
+    //ถ้า userData มีการเปลี่ยนแปลงและ userData.id มีค่า ให้เปลี่ยนสเตทเป็น false
+    if (userData.id) setSkip(false);
+  }, [userData]);
 
   return (
     <NavigationContainer>

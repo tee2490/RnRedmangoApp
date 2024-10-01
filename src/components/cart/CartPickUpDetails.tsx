@@ -4,28 +4,15 @@ import { Formik } from "formik";
 import { ScrollView } from "react-native-gesture-handler";
 import styles from "./CartPickUpDetails.style";
 import { FormInput } from "../../ui";
-import { COLORS } from "../../common";
-import * as Yup from "yup";
+import { COLORS, PickupDetailsSchema } from "../../common";
+import { cartPickUpDto } from "../../interfaces/dto";
 
 export default function CartPickUpDetails() {
-  const initialData = {
+  const initialData : cartPickUpDto = {
     name: "Test name",
     email: "Test@email.com",
     phoneNumber: "1234567",
   };
-
-  const PickupDetailsSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Required"),
-    email: Yup.string().email("Invalid email").required("Required"),
-    phoneNumber: Yup.string()
-      .matches(/^[0-9]+$/, "Phone number must be digits")
-      .min(7, "Too Short!")
-      .max(15, "Too Long!")
-      .required("Required"),
-  });
 
   return (
     <Formik

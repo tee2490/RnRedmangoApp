@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Button } from "react-native";
 import { Formik } from "formik";
 import { ScrollView } from "react-native-gesture-handler";
 import styles from "./CartPickUpDetails.style";
 import { FormInput } from "../../ui";
-import { COLORS, PickupDetailsSchema } from "../../common";
+import { COLORS, MiniLoader, PickupDetailsSchema } from "../../common";
 import { cartPickUpDto } from "../../interfaces/dto";
 
 export default function CartPickUpDetails() {
-  const initialData : cartPickUpDto = {
+  const [loading, setLoading] = useState(false);
+  const initialData: cartPickUpDto = {
     name: "Test name",
     email: "Test@email.com",
     phoneNumber: "1234567",
@@ -68,12 +69,16 @@ export default function CartPickUpDetails() {
               <Text>No of items: 10</Text>
             </View>
 
-            <Button
-              onPress={() => handleSubmit()}
-              title="Looks Good? Place Order!"
-              color={COLORS.success}
-              disabled={!isValid}
-            />
+            {!loading ? (
+              <MiniLoader />
+            ) : (
+              <Button
+                onPress={() => handleSubmit()}
+                title="Looks Good? Place Order!"
+                color={COLORS.success}
+                disabled={!isValid}
+              />
+            )}
           </View>
         </ScrollView>
       )}

@@ -10,13 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../redux/apis/shoppingCartApi";
 import { userTest } from "../common/SD";
 import { setShoppingCart } from "../redux/shoppingCartSlice";
-import { cartItemModel } from "../interfaces";
+import { cartItemModel, userModel } from "../interfaces";
 import { RootState } from "../redux/store";
 import { Badge } from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigation() {
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const shoppingCartFromStore: cartItemModel[] = useSelector(
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
   );
@@ -69,7 +72,9 @@ export default function BottomTabNavigation() {
           })}
         >
           <Tab.Screen name="HOME" component={StackNavigation} />
-          <Tab.Screen name="CART" component={ShoppingCartScreen} />
+          {userData?.id.length > 0 && (
+            <Tab.Screen name="CART" component={ShoppingCartScreen} />
+          )}
           <Tab.Screen name="SETTING" component={HomeScreen} />
           <Tab.Screen name="PROFILE" component={ProfileScreen} />
         </Tab.Navigator>

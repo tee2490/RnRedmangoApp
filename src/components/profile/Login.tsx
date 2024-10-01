@@ -15,11 +15,20 @@ import { COLORS, LoginSchema } from "../../common";
 import styles from "./Login.style";
 import { BackBtn, FormButton, FormInput } from "../../ui";
 import { loginDto } from "../../interfaces/dto";
+import { useLoginUserMutation } from "../../redux/apis/authApi";
+import { useDispatch } from "react-redux";
+import { showMessage } from "react-native-flash-message";
+import { apiResponse, userModel } from "../../interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import { setLoggedInUser } from "../../redux/userAuthSlice";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [obsecureText, setObsecureText] = useState(false);
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+  const [loginUser] = useLoginUserMutation();
 
   const inValidForm = () => {
     Alert.alert("Invalid Form", "Please provide all required fields", [
@@ -34,7 +43,37 @@ export default function Login() {
     ]);
   };
 
-  const login = async (userInput: loginDto) => {};
+  const login = async (userInput: loginDto) => {
+    setLoading(true);
+
+    const response: apiResponse = await loginUser({
+      userName: userInput.username,
+      password: userInput.password,
+    });
+
+    if (response.data) {
+      console.log(response.data);
+      const { token } = response.data.result;
+      await AsyncStorage.setItem("token", token);
+
+      const { fullName, id, email, role }: userModel = jwtDecode(token);
+      dispatch(setLoggedInUser({ fullName, id, email, role }));
+
+      navigate("ProfileScreen");
+    } else if (response.error) {
+      showMessage({
+        message: response.error.data.errorMessages[0],
+        type: "warning",
+        backgroundColor: COLORS.tertiary,
+        color: COLORS.white,
+        icon: { icon: "auto", position: "left" }, // Icon auto-detected by type or custom icon
+      });
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  };
 
   const initialData: loginDto = {
     username: "admin",

@@ -19,16 +19,16 @@ import { RootStackParamList } from "../navigates/typeRootStack";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SD_Roles } from "../common/SD";
 import { List } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { userModel } from "../interfaces";
+import { RootState } from "../redux/store";
 
 export default function ProfileScreen() {
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const userData = {
-    fullName: "Test Name",
-    id: "",
-    email: "Test@email.com",
-    role: "admin",
-  };
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
 
   const userLogout = async () => {};
 

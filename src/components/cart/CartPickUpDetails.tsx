@@ -6,6 +6,9 @@ import styles from "./CartPickUpDetails.style";
 import { FormInput } from "../../ui";
 import { COLORS, MiniLoader, PickupDetailsSchema } from "../../common";
 import { cartPickUpDto } from "../../interfaces/dto";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { cartItemModel } from "../../interfaces";
 
 export default function CartPickUpDetails() {
   const [loading, setLoading] = useState(false);
@@ -14,6 +17,19 @@ export default function CartPickUpDetails() {
     email: "Test@email.com",
     phoneNumber: "1234567",
   };
+
+  const shoppingCartFromStore: cartItemModel[] = useSelector(
+    (state: RootState) => state.shoppingCartStore.cartItems ?? []
+  );
+
+  let grandTotal = 0;
+  let totalItems = 0;
+  
+  shoppingCartFromStore?.map((cartItem: cartItemModel) => {
+    totalItems += cartItem.quantity ?? 0;
+    grandTotal += (cartItem.menuItem?.price ?? 0) * (cartItem.quantity ?? 0);
+    return null;
+  });
 
   return (
     <Formik
@@ -65,11 +81,11 @@ export default function CartPickUpDetails() {
             ) : null}
 
             <View style={styles.summary}>
-              <Text>Grand Total: $99.99</Text>
-              <Text>No of items: 10</Text>
+              <Text>Grand Total: ${grandTotal.toFixed(2)}</Text>
+              <Text>No of items: {totalItems}</Text>
             </View>
 
-            {!loading ? (
+            {loading ? (
               <MiniLoader />
             ) : (
               <Button

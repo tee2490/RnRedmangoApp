@@ -8,7 +8,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SIZES } from "../common";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../redux/apis/shoppingCartApi";
-import { userTest } from "../common/SD";
 import { setShoppingCart } from "../redux/shoppingCartSlice";
 import { cartItemModel, userModel } from "../interfaces";
 import { RootState } from "../redux/store";
@@ -24,7 +23,7 @@ export default function BottomTabNavigation() {
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
   );
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetShoppingCartQuery(userTest);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
 
   useEffect(() => {
     if (!isLoading) {

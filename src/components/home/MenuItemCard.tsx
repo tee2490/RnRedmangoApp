@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View,Image } from 'react-native'
 import React, { useState } from 'react'
 import { menuItemModel, userModel } from '../../interfaces';
 import styles from './MenuItemCard.style';
-import { baseUrl, userTest } from '../../common/SD';
+import { baseUrl } from '../../common/SD';
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, MiniLoader } from '../../common';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -32,7 +32,7 @@ export default function MenuItemCard(item: Props) {
     const response = await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: 1,
-      userId: userTest,
+      userId: userData.id,
     });
     console.log(response);
     setTimeout(() => {

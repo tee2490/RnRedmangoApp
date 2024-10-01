@@ -4,13 +4,15 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./CartSummary.style";
 import { useDispatch, useSelector } from "react-redux";
-import { cartItemModel } from "../../interfaces";
+import { cartItemModel, userModel } from "../../interfaces";
 import { RootState } from "../../redux/store";
 import { useUpdateShoppingCartMutation } from "../../redux/apis/shoppingCartApi";
-import { userTest } from "../../common/SD";
 import { removeFromCart, updateQuantity } from "../../redux/shoppingCartSlice";
 
 const CartSummary: React.FC = () => {
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const dispatch = useDispatch();
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
   const shoppingCartFromStore: cartItemModel[] = useSelector(
@@ -68,7 +70,7 @@ const CartSummary: React.FC = () => {
       updateShoppingCart({
         menuItemId: cartItem.menuItem?.id,
         updateQuantityBy: 0,
-        userId: userTest,
+        userId: userData.id,
       });
       //ปรับปรุง State
       dispatch(removeFromCart({ cartItem, quantity: 0 }));
@@ -77,7 +79,7 @@ const CartSummary: React.FC = () => {
       updateShoppingCart({
         menuItemId: cartItem.menuItem?.id,
         updateQuantityBy: updateQuantityBy,
-        userId: userTest,
+        userId: userData.id,
       });
       dispatch(
         updateQuantity({

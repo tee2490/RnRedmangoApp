@@ -5,5 +5,6 @@ export type RootStackParamList = {
     MenuItemDetailScreen: { id: number };
     ShoppingCartScreen : undefined
     ProfileScreen: undefined
+    Login: undefined
   };
   

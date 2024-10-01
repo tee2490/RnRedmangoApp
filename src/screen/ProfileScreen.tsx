@@ -25,7 +25,7 @@ export default function ProfileScreen() {
 
   const userData = {
     fullName: "Test Name",
-    id: "999",
+    id: "",
     email: "Test@email.com",
     role: "admin",
   };

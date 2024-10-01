@@ -8,6 +8,7 @@ import {
   ShoppingCartScreen,
 } from "../screen";
 import { RootStackParamList } from "./typeRootStack";
+import { Login } from "../components/profile";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +37,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="ProfileScreen"
           component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Login"
+          component={Login}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

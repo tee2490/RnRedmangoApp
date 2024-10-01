@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { COLORS, SIZES } from "../common";
 import { Menu } from "react-native-paper";
-import { CartSummary } from "../components/cart";
+import { CartPickUpDetails, CartSummary } from "../components/cart";
 
 export default function ShoppingCartScreen() {
   const [visible, setVisible] = useState(true);
@@ -40,7 +40,7 @@ export default function ShoppingCartScreen() {
             backgroundColor: COLORS.secondary,
           }}
         >
-          {visible ? <CartSummary /> : <Text>CartPickUpDetails</Text>}
+          {visible ? <CartSummary /> : <CartPickUpDetails/>}
         </View>
       </View>
     </GestureHandlerRootView>

@@ -18,8 +18,12 @@ import { BackBtn, FormButton, FormInput } from "../../ui";
 import { SD_Roles } from "../../common/SD";
 import RNPickerSelect from "react-native-picker-select";
 import { registerDto } from "../../interfaces/dto";
+import { useRegisterUserMutation } from "../../redux/apis/authApi";
+import { apiResponse } from "../../interfaces";
+import { showMessage } from "react-native-flash-message";
 
 export default function Register() {
+  const [registerUser] = useRegisterUserMutation();
   const [loading, setLoading] = useState(false);
   const [obsecureText, setObsecureText] = useState(false);
   const { navigate, canGoBack, goBack } =
@@ -40,7 +44,33 @@ export default function Register() {
     ]);
   };
 
-  const register = async (userInput: registerDto) => {};
+  const register = async (userInput: registerDto) => {
+    setLoading(true);
+
+    const response: apiResponse = await registerUser({
+      userName: userInput.username,
+      password: userInput.password,
+      role: userInput.role,
+      name: userInput.name,
+    });
+
+    if (response.data) {
+      console.log(response.data);
+      navigate("ProfileScreen");
+    } else if (response.error) {
+      showMessage({
+        message: response.error.data.errorMessages[0],
+        type: "warning",
+        backgroundColor: COLORS.red,
+        color: COLORS.white,
+        icon: { icon: "auto", position: "left" }, // Icon auto-detected by type or custom icon
+      });
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  };
 
   const initialData: registerDto = {
     username: "admin",

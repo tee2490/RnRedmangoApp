@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import { Provider } from "react-redux";
 import store from "./src/redux/store";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -35,6 +36,7 @@ export default function App() {
     <Provider store={store}>
       <PaperProvider theme={theme}>
         <MainNavigators />
+        <FlashMessage position="bottom" />
         <StatusBar style="dark" />
       </PaperProvider>
     </Provider>

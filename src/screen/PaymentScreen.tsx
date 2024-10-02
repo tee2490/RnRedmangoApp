@@ -26,7 +26,7 @@ export default function PaymentScreen({ route }: Props) {
     <StripeProvider publishableKey={publishableKey}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 0.8 }}>
-          <OrderSummary />
+        <OrderSummary data={state.apiResult} userInput={state.userInput} />
         </View>
         <View style={{ flex: 0.2 }}>
           <PaymentForm />

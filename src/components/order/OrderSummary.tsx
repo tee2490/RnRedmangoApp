@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import styles from "./OrderSummary.style";
+import { orderSummaryProps } from "./orderSummaryProps";
 
 type MenuItem = {
   name: string;
@@ -8,7 +9,7 @@ type MenuItem = {
   quantity: number;
 };
 
-export default function OrderSummary() {
+export default function OrderSummary({ data, userInput }: orderSummaryProps) {
   const menuItems: MenuItem[] = [
     { name: "Spring Roll", price: 7.99, quantity: 36 },
     { name: "Idli", price: 8.99, quantity: 20 },

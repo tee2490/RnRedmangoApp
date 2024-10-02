@@ -43,7 +43,7 @@ export default function CheckoutScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 10 }}></View>
+      {/* <View style={{ marginTop: 10 }}></View> */}
       <FormButton
         title="Checkout"
         isValid={true}

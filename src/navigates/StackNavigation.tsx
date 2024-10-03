@@ -10,6 +10,7 @@ import {
 } from "../screen";
 import { RootStackParamList } from "./typeRootStack";
 import { Login, Register } from "../components/profile";
+import OrderConfirmed from "../components/order/OrderConfirmed";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -56,6 +57,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="PaymentScreen"
           component={PaymentScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="OrderConfirmed"
+          component={OrderConfirmed}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

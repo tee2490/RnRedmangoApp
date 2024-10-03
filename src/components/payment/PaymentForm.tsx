@@ -6,12 +6,15 @@ import { orderSummaryProps } from "../order/orderSummaryProps";
 import { apiResponse, cartItemModel } from "../../interfaces";
 import { SD_Status } from "../../common/SD";
 import { useCreateOrderMutation } from "../../redux/apis/orderApi";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../navigates";
 
 export default function PaymentForm({
   data,
   userInput,
   clientSecret,
 }: orderSummaryProps) {
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [createOrder] = useCreateOrderMutation();
   const { initPaymentSheet, presentPaymentSheet, retrievePaymentIntent } =
     useStripe();
@@ -90,7 +93,14 @@ export default function PaymentForm({
             ? SD_Status.CONFIRMED
             : SD_Status.PENDING,
       });
-      console.log(response);
+
+      if (response) {
+        if (response.data?.result.status === SD_Status.CONFIRMED) {
+          navigate("OrderConfirmed", {
+            id: response.data.result.orderHeaderId,
+          });
+        }
+      }
     } //ปีกกาปิดของ else
   };
 

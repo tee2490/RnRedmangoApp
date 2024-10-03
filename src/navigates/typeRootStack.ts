@@ -8,5 +8,6 @@ export type RootStackParamList = {
     Login: undefined
     Register: undefined;
     PaymentScreen: {state: any}
+    OrderConfirmed : {id : any}
   };
   

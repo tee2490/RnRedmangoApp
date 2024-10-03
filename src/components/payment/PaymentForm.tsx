@@ -3,17 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useStripe } from "@stripe/stripe-react-native";
 import { FormButton } from "../../ui";
 
-//ให้นำของเดิมมาจาก Stripe Dashboard ใช้สำหรับทดสอบเท่านั้น
-const testClientSecret = "pi_3PxO5xLEJFIvBBF20kVW3KVi_secret_X4HLMb4ctmg68EGhD1wQEdIuw"
+interface Props {
+  clientSecret : string
+}
 
-export default function CheckoutScreen() {
+export default function PaymentForm({clientSecret}:Props) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
 
   const initializePaymentSheet = async () => {
     const { error } = await initPaymentSheet({
       merchantDisplayName: "Coms, Inc.",
-      paymentIntentClientSecret: testClientSecret,
+      paymentIntentClientSecret: clientSecret,
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
         name: "Teeradet",

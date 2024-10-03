@@ -3,14 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useStripe } from "@stripe/stripe-react-native";
 import { FormButton } from "../../ui";
 import { orderSummaryProps } from "../order/orderSummaryProps";
-import { cartItemModel } from "../../interfaces";
+import { apiResponse, cartItemModel } from "../../interfaces";
+import { SD_Status } from "../../common/SD";
+import { useCreateOrderMutation } from "../../redux/apis/orderApi";
 
 export default function PaymentForm({
   data,
   userInput,
   clientSecret,
 }: orderSummaryProps) {
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [createOrder] = useCreateOrderMutation();
+  const { initPaymentSheet, presentPaymentSheet, retrievePaymentIntent } =
+    useStripe();
   const [loading, setLoading] = useState(false);
 
   const initializePaymentSheet = async () => {
@@ -37,6 +41,7 @@ export default function PaymentForm({
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
       Alert.alert("Success", "Your order is confirmed!");
+      const { paymentIntent } = await retrievePaymentIntent(clientSecret);
 
       // มาจาก Post : /api/Order
       // "pickupName": "string",
@@ -56,6 +61,8 @@ export default function PaymentForm({
       //   }
       // ]
       //สร้างออบเจคในส่วนของ OrderDetail
+      let grandTotal = 0;
+      let totalItems = 0;
       const orderDetailsDTO: any = [];
       data.cartItems?.forEach((item: cartItemModel) => {
         const tempOrderDetail: any = {};
@@ -64,13 +71,32 @@ export default function PaymentForm({
         tempOrderDetail["itemName"] = item.menuItem?.name;
         tempOrderDetail["price"] = item.menuItem?.price;
         orderDetailsDTO.push(tempOrderDetail);
+        grandTotal += item.quantity! * item.menuItem?.price!;
+        totalItems += item.quantity!;
       });
-    }
+
+      //ส่งไปบันทึกยัง Post : /api/Order
+      const response: apiResponse = await createOrder({
+        pickupName: userInput.name,
+        pickupPhoneNumber: userInput.phoneNumber,
+        pickupEmail: userInput.email,
+        totalItems: totalItems,
+        orderTotal: grandTotal,
+        orderDetailsDTO: orderDetailsDTO,
+        stripePaymentIntentID: data.stripePaymentIntentId,
+        applicationUserId: data.userId,
+        status:
+          paymentIntent?.status === "Succeeded"
+            ? SD_Status.CONFIRMED
+            : SD_Status.PENDING,
+      });
+      console.log(response);
+    } //ปีกกาปิดของ else
   };
 
   useEffect(() => {
     initializePaymentSheet();
-  }, []);
+  }, [clientSecret]);
 
   return (
     <View style={styles.container}>

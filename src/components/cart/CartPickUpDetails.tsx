@@ -40,11 +40,10 @@ export default function CartPickUpDetails() {
   const onSubmit = async (userInput: cartPickUpDto) => {
     setLoading(true);
 
-    // const { data }: apiResponse = await initiatePayment(userData.id);
-    // const orderSummary = { grandTotal, totalItems };
-
+    const { data }: apiResponse = await initiatePayment(userData.id);
+    
     navigate("PaymentScreen", {
-      state: { apiResult: "Test data?.result", userInput },
+      state: { apiResult: data?.result, userInput },
     });
     
     setLoading(false);

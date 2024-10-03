@@ -2,23 +2,9 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import styles from "./OrderSummary.style";
 import { orderSummaryProps } from "./orderSummaryProps";
-
-type MenuItem = {
-  name: string;
-  price: number;
-  quantity: number;
-};
+import { cartItemModel } from "../../interfaces";
 
 export default function OrderSummary({ data, userInput }: orderSummaryProps) {
-  const menuItems: MenuItem[] = [
-    { name: "Spring Roll", price: 7.99, quantity: 36 },
-    { name: "Idli", price: 8.99, quantity: 20 },
-  ];
-
-  const totalPrice = menuItems.reduce((total, item) => {
-    return total + item.price * item.quantity;
-  }, 0);
-
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -26,28 +12,34 @@ export default function OrderSummary({ data, userInput }: orderSummaryProps) {
 
         <View style={styles.section}>
           <Text style={styles.label}>
-            Name: <Text style={styles.value}>user</Text>
+            Name: <Text style={styles.value}>{userInput.name}</Text>
           </Text>
           <Text style={styles.label}>
-            Email: <Text style={styles.value}>user@email.com</Text>
+            Email: <Text style={styles.value}>{userInput.email}</Text>
           </Text>
           <Text style={styles.label}>
-            Phone: <Text style={styles.value}>11111</Text>
+            Phone: <Text style={styles.value}>{userInput.phoneNumber}</Text>
           </Text>
         </View>
 
         <Text style={styles.header}>Menu Items</Text>
-        {menuItems.map((item, index) => (
+        {data?.cartItems?.map((cartItem: cartItemModel, index: number) => (
           <View key={index} style={styles.itemRow}>
-            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemName}>
+              {cartItem.menuItem?.name.length! > 15
+                ? cartItem.menuItem?.name.slice(0, 15) + "..."
+                : cartItem.menuItem?.name}
+            </Text>
             <Text style={styles.itemPrice}>
-              ${item.price.toFixed(2)} x {item.quantity} = $
-              {(item.price * item.quantity).toFixed(2)}
+              ${cartItem.menuItem?.price.toFixed(2)} x {cartItem.quantity} = $
+              {(
+                (cartItem.menuItem?.price ?? 0) * cartItem.quantity! ?? 0
+              ).toFixed(2)}
             </Text>
           </View>
         ))}
 
-        <Text style={styles.total}>Total: ${totalPrice.toFixed(2)}</Text>
+        <Text style={styles.total}>Total: ${data?.cartTotal?.toFixed(2)}</Text>
       </ScrollView>
     </View>
   );

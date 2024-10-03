@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigates/typeRootStack";
@@ -26,10 +26,14 @@ export default function PaymentScreen({ route }: Props) {
     <StripeProvider publishableKey={publishableKey}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 0.8 }}>
-        <OrderSummary data={state.apiResult} userInput={state.userInput} />
+          <OrderSummary data={state.apiResult} userInput={state.userInput} />
         </View>
         <View style={{ flex: 0.2 }}>
-        <PaymentForm clientSecret={state.apiResult.clientSecret}/>
+          <PaymentForm
+            clientSecret={state.apiResult.clientSecret}
+            data={state.apiResult}
+            userInput={state.userInput}
+          />
         </View>
       </View>
     </StripeProvider>

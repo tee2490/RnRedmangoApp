@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import styles from "../../screen/orders/MyOrderScreen.style";
-import { COLORS, MainLoader } from "../../common";
+import { COLORS, FONTS, getStatusColor, MainLoader, SIZES } from "../../common";
 import { FormButton } from "../../ui";
 import OrderCardProps from "./orderCardProps";
 
@@ -63,7 +63,15 @@ export default function OrderList({ isLoading, orderData }: OrderCardProps) {
 
             <Text
               numberOfLines={1}
-              style={styles.supplya}
+              style={{
+               alignSelf:'flex-start',
+                fontFamily: FONTS.regular,
+                color: COLORS.white,
+                fontSize: SIZES.small,
+                backgroundColor: `${getStatusColor(orderData.status!)}`,
+                borderRadius: 7,
+                paddingHorizontal:5,
+              }}
             >
               {orderData.status}
             </Text>

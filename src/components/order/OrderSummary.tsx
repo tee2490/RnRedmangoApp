@@ -3,12 +3,27 @@ import { View, Text, ScrollView } from "react-native";
 import styles from "./OrderSummary.style";
 import { orderSummaryProps } from "./orderSummaryProps";
 import { cartItemModel } from "../../interfaces";
+import { getStatusColor } from "../../common";
 
-export default function OrderSummary({ data, userInput }: orderSummaryProps) {
+export default function OrderSummary({
+  data,
+  userInput,
+  payment,
+}: orderSummaryProps) {
+  const badgeTypeColor = getStatusColor(data.status!);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>Order Summary</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Order Summary</Text>
+
+          {!payment && (
+            <Text style={styles.statusContainer(badgeTypeColor)}>
+              {data.status}
+            </Text>
+          )}
+        </View>
 
         <View style={styles.section}>
           <Text style={styles.label}>

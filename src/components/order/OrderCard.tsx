@@ -4,8 +4,12 @@ import styles from "../../screen/orders/MyOrderScreen.style";
 import { COLORS, FONTS, getStatusColor, MainLoader, SIZES } from "../../common";
 import { FormButton } from "../../ui";
 import OrderCardProps from "./orderCardProps";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../navigates";
 
 export default function OrderList({ isLoading, orderData }: OrderCardProps) {
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <>
       {isLoading && <MainLoader />}
@@ -64,13 +68,13 @@ export default function OrderList({ isLoading, orderData }: OrderCardProps) {
             <Text
               numberOfLines={1}
               style={{
-               alignSelf:'flex-start',
+                alignSelf: "flex-start",
                 fontFamily: FONTS.regular,
                 color: COLORS.white,
                 fontSize: SIZES.small,
                 backgroundColor: `${getStatusColor(orderData.status!)}`,
                 borderRadius: 7,
-                paddingHorizontal:5,
+                paddingHorizontal: 5,
               }}
             >
               {orderData.status}
@@ -78,7 +82,13 @@ export default function OrderList({ isLoading, orderData }: OrderCardProps) {
           </View>
 
           <View>
-            <FormButton title="Detail" isValid={true} onPress={() => {}} />
+            <FormButton
+              title="Detail"
+              isValid={true}
+              onPress={() =>
+                navigate("OrderDetailScreen", { id: orderData.orderHeaderId })
+              }
+            />
           </View>
         </TouchableOpacity>
       )}

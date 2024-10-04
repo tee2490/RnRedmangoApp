@@ -5,6 +5,7 @@ import {
   HomeScreen,
   MenuItemDetailScreen,
   MyOrderScreen,
+  OrderDetailScreen,
   PaymentScreen,
   ProfileScreen,
   ShoppingCartScreen,
@@ -70,6 +71,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="MyOrderScreen"
           component={MyOrderScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="OrderDetailScreen"
+          component={OrderDetailScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

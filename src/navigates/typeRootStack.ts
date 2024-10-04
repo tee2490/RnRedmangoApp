@@ -10,5 +10,6 @@ export type RootStackParamList = {
     PaymentScreen: {state: any}
     OrderConfirmed : {id : any}
     MyOrderScreen : undefined
+    OrderDetailScreen: { id: any }
   };
   

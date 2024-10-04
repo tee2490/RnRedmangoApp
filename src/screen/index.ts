@@ -5,6 +5,7 @@ import ProfileScreen from "./ProfileScreen";
 import PaymentScreen from "./PaymentScreen";
 import MyOrderScreen from "./orders/MyOrderScreen";
 import OrderDetailScreen from "./orders/OrderDetailScreen";
+import AllOrderScreen from "./orders/AllOrderScreen";
 
 export {
   HomeScreen,
@@ -14,4 +15,5 @@ export {
   PaymentScreen,
   MyOrderScreen,
   OrderDetailScreen,
+  AllOrderScreen,
 };

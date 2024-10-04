@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   HomeScreen,
   MenuItemDetailScreen,
+  MyOrderScreen,
   PaymentScreen,
   ProfileScreen,
   ShoppingCartScreen,
@@ -63,6 +64,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="OrderConfirmed"
           component={OrderConfirmed}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="MyOrderScreen"
+          component={MyOrderScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

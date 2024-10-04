@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: "space-between",
     alignItems:'center',
+    marginTop:10,
+    backgroundColor:COLORS.secondary,
   },
   statusContainer: (color: any) => ({
     borderColor: color,

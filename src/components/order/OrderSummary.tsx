@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import styles from "./OrderSummary.style";
 import { orderSummaryProps } from "./orderSummaryProps";
 import { cartItemModel } from "../../interfaces";
-import { getStatusColor } from "../../common";
+import { COLORS, getStatusColor } from "../../common";
+import { useNavigation } from "@react-navigation/native";
+import { BackBtn1, FormButton1 } from "../../ui";
+import { SD_Roles, SD_Status } from "../../common/SD";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export default function OrderSummary({
   data,
@@ -11,6 +16,19 @@ export default function OrderSummary({
   payment,
 }: orderSummaryProps) {
   const badgeTypeColor = getStatusColor(data.status!);
+  const { goBack } = useNavigation();
+  const userData = useSelector((state: RootState) => state.userAuthStore);
+  const [loading, setIsLoading] = useState(false);
+
+  const nextStatus: any =
+    data.status! === SD_Status.CONFIRMED
+      ? { color: COLORS.info, value: SD_Status.BEING_COOKED }
+      : data.status! === SD_Status.BEING_COOKED
+      ? { color: COLORS.warning, value: SD_Status.READY_FOR_PICKUP }
+      : data.status! === SD_Status.READY_FOR_PICKUP && {
+          color: COLORS.success,
+          value: SD_Status.COMPLETED,
+        };
 
   return (
     <View style={styles.container}>
@@ -55,6 +73,32 @@ export default function OrderSummary({
         ))}
 
         <Text style={styles.total}>Total: ${data?.cartTotal?.toFixed(2)}</Text>
+
+        {!payment && userData.role == SD_Roles.ADMIN && (
+          <View style={styles.nextContainer}>
+            <BackBtn1 size={40} onPress={() => goBack()} />
+
+            <View style={{ flexDirection: "row" }}>
+              {data.status! !== SD_Status.CANCELLED &&
+                data.status! !== SD_Status.COMPLETED && (
+                  <>
+                    <FormButton1
+                      isLoading={loading}
+                      isValid={true}
+                      title="Cancel"
+                      color={COLORS.danger}
+                    />
+                    <FormButton1
+                      isLoading={loading}
+                      isValid={true}
+                      title={nextStatus.value}
+                      color={nextStatus.color}
+                    />
+                  </>
+                )}
+            </View>
+          </View>
+        )}
       </ScrollView>
     </View>
   );

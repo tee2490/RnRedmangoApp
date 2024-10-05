@@ -15,6 +15,7 @@ import {
 import { RootStackParamList } from "./typeRootStack";
 import { Login, Register } from "../components/profile";
 import OrderConfirmed from "../components/order/OrderConfirmed";
+import { MenuItemUpsert } from "../components/menu";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -91,6 +92,12 @@ export default function StackNavigation() {
         <Stack.Screen
           name="MainListScreen"
           component={MainListScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="MenuItemUpsert"
+          component={MenuItemUpsert}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

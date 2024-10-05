@@ -12,5 +12,6 @@ export type RootStackParamList = {
     OrderDetailScreen: { id: any }
     AllOrderScreen: undefined
     MainListScreen: undefined
+    MenuItemUpsert: undefined
   };
   

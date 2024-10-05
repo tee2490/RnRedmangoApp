@@ -1,8 +1,7 @@
-import { menuItemModel } from "../interfaces";
 
 export type RootStackParamList = {
     HomeScreen : undefined
-    MenuItemDetailScreen: { id: number };
+    MenuItemDetailScreen: { id: number }
     ShoppingCartScreen : undefined
     ProfileScreen: undefined
     Login: undefined
@@ -11,6 +10,7 @@ export type RootStackParamList = {
     OrderConfirmed : {id : any}
     MyOrderScreen : undefined
     OrderDetailScreen: { id: any }
-    AllOrderScreen: undefined;
+    AllOrderScreen: undefined
+    MainListScreen: undefined
   };
   

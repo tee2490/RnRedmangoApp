@@ -21,7 +21,7 @@ export default function MainListScreen() {
           <Text style={styles.titletxt}>MenuItem List</Text>
         </View>
 
-        <TouchableOpacity onPress={()=>navigate("MenuItemUpsert")}>
+        <TouchableOpacity onPress={()=>navigate("MenuItemUpsert",{id : null})}>
           <Ionicons name="add-circle-sharp" size={35} color={COLORS.primary1} />
         </TouchableOpacity>
       </View>

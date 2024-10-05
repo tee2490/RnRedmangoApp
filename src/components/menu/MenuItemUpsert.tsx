@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Pressable, Text, Alert } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import CustomKeyAvoidingView from "../../ui/CustomKeyAvoidingView";
@@ -7,7 +7,7 @@ import OptionModal from "./OptionModal";
 import styles from "./MenuItemUpsert.style";
 import { COLORS, menuUpsertSchema, selectImages } from "../../common";
 import { menuUpsertDto } from "../../interfaces/dto";
-import { SD_Categories } from "../../common/SD";
+import { baseUrl, SD_Categories } from "../../common/SD";
 import { Formik } from "formik";
 import { BackBtn1, FormButton1, FormInput } from "../../ui";
 import RNPickerSelect from "react-native-picker-select";
@@ -15,7 +15,11 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigates";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { showMessage } from "react-native-flash-message";
-import { useCreateMenuItemMutation } from "../../redux/apis/menuItemApi";
+import {
+  useCreateMenuItemMutation,
+  useGetMenuItemByIdQuery,
+  useUpdateMenuItemMutation,
+} from "../../redux/apis/menuItemApi";
 import mime from "mime";
 
 const imageOptions = [{ value: "Remove Image", id: "remove" }];
@@ -56,6 +60,22 @@ export default function MenuItemUpsert({ route }: Props) {
   const [loading, setLoading] = useState(false);
   const { navigate, goBack } = useNavigation<NavigationProp<RootStackParamList>>();
   const [createMenuItem] = useCreateMenuItemMutation();
+  const [updateMenuItem] = useUpdateMenuItemMutation();
+  const { data } = useGetMenuItemByIdQuery(id);
+
+  useEffect(() => {
+    if (data && data.result) {
+      const tempData = {
+        name: data.result.name,
+        description: data.result.description,
+        specialTag: data.result.specialTag,
+        category: data.result.category,
+        price: data.result.price.toString(),
+      };
+      setMenuItemInputs(tempData);
+      setImages([baseUrl + data.result.image]);
+    }
+  }, [data]);
 
   const handleOnImageSelection = async () => {
     const newImages = await selectImages();
@@ -100,6 +120,12 @@ export default function MenuItemUpsert({ route }: Props) {
 
     if (id) {
       //update
+      formData.append("Id", id);
+      response = await updateMenuItem({ data: formData, id });
+      showMessage({
+        message: "Menu Item updated successfully",
+        type: "success",
+      });
     } else {
       //create
       response = await createMenuItem(formData);

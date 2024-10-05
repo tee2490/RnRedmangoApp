@@ -14,6 +14,9 @@ import RNPickerSelect from "react-native-picker-select";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigates";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { showMessage } from "react-native-flash-message";
+import { useCreateMenuItemMutation } from "../../redux/apis/menuItemApi";
+import mime from "mime";
 
 const imageOptions = [{ value: "Remove Image", id: "remove" }];
 
@@ -52,6 +55,7 @@ export default function MenuItemUpsert({ route }: Props) {
   const [menuItemInputs, setMenuItemInputs] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const { navigate, goBack } = useNavigation<NavigationProp<RootStackParamList>>();
+  const [createMenuItem] = useCreateMenuItemMutation();
 
   const handleOnImageSelection = async () => {
     const newImages = await selectImages();
@@ -59,7 +63,60 @@ export default function MenuItemUpsert({ route }: Props) {
   };
 
   const onHandleSubmit = async (menuItemInputs: menuUpsertDto) => {
-    console.log(menuItemInputs);
+    setLoading(true);
+    if (images.length == 0) {
+      showMessage({ message: "Please upload an image", type: "warning" });
+      setLoading(false);
+      return;
+    }
+
+    // appending images
+    const newImages = images.map((img, index) => ({
+      name: "image_" + index,
+      type: mime.getType(img),
+      uri: img,
+    }));
+
+    //ดูจาก https://stackoverflow.com/questions/42521679/how-can-i-upload-a-photo-with-expo
+    const fileUri = newImages[0].uri;
+    const fileName = fileUri.split("/").pop();
+    const match = /\.(\w+)$/.exec(fileName!);
+    const fileType = match ? `image/${match[1]}` : `image`;
+
+    const fileData = { uri: fileUri, name: fileName, type: fileType } as any;
+
+    const formData = new FormData();
+
+    //ปรับการนำค่าใส่ใน formData ให้สั้นลงโดยใช้ (key, value)
+    type menuInfoKeys = keyof typeof menuItemInputs;
+
+    for (let key in menuItemInputs) {
+      const value = menuItemInputs[key as menuInfoKeys];
+      formData.append(key, value);
+    }
+    formData.append("File", fileData);
+
+    let response;
+
+    if (id) {
+      //update
+    } else {
+      //create
+      response = await createMenuItem(formData);
+      showMessage({
+        message: "Menu Item created successfully",
+        type: "success",
+      });
+    }
+
+    if (response) {
+      setLoading(false);
+      navigate("MainListScreen");
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
 
   const FormikForm = () => (

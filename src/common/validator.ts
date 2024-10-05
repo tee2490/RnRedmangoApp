@@ -25,6 +25,14 @@ export const RegisterSchema = Yup.object().shape({
   password: Yup.string()
     .min(3, "Password must be at least 8 character")
     .required("Required"),
-    name: Yup.string().required("Required"),
-    role: Yup.string().required("Required"),
+  name: Yup.string().required("Required"),
+  role: Yup.string().required("Required"),
+});
+
+export const menuUpsertSchema = Yup.object().shape({
+  name: Yup.string().required("Required"),
+  description: Yup.string(),
+  specialTag: Yup.string(),
+  category: Yup.string().required("Required"),
+  price: Yup.number().min(1, "Price must be at least 1").required("Required"),
 });

@@ -6,7 +6,7 @@ import { COLORS, SIZES } from "../common";
 
 export default function HomeScreen() {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.searchContainer}>
         <MenuSearchBar />
       </View>
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   searchContainer: {
+    //flex:1,
     margin: SIZES.xSmall,
     flexDirection: "row",
     justifyContent: "space-between",

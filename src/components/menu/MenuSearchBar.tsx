@@ -3,9 +3,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { COLORS } from "../../common";
+import { setSearchItem } from "../../redux/menuItemSlice";
+import { useDispatch } from "react-redux";
 
 export default function MenuSearchBar() {
   const [debouncedValue, setDebouncedValue] = useState<string>("");
+  const dispatch = useDispatch();
 
   // Create a debounced function
   const debouncedSearch = useCallback(
@@ -21,7 +24,7 @@ export default function MenuSearchBar() {
   };
 
   useEffect(() => {
-    console.log(debouncedValue);
+    dispatch(setSearchItem(debouncedValue));
   }, [debouncedValue]);
 
   return (

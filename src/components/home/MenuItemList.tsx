@@ -7,10 +7,11 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { FloatingAction } from "react-native-floating-action";
 import { COLORS, MainLoader } from "../../common";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetMenuItemsQuery } from "../../redux/apis/menuItemApi";
 import { setMenuItem } from "../../redux/menuItemSlice";
 import { FormDialog } from "../../ui";
+import { RootState } from "../../redux/store";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
@@ -18,6 +19,31 @@ export default function MenuItemList() {
   const dispatch = useDispatch();
   const { data, isLoading, isError, error } = useGetMenuItemsQuery(null);
   const [message, setMessage] = useState(null);
+  const searchValue = useSelector(
+    (state: RootState) => state.menuItemStore.search
+  );
+
+  //เมื่อเลือกประเภท หรือ คำค้น ให้ทำการกรองข้อมูลใหม่
+  useEffect(() => {
+    if (data && data.result) {
+      const tempMenuArray = handleFilters(searchValue);
+      setMenuItems(tempMenuArray);
+    }
+  }, [searchValue]);
+
+  const handleFilters = (search: string) => {
+    let tempArray = [...data.result];
+
+    //search functionality
+    if (search) {
+      const tempSearchMenuItems = [...tempArray];
+      tempArray = tempSearchMenuItems.filter((item: menuItemModel) =>
+        item.name.toUpperCase().includes(search.toUpperCase())
+      );
+    }
+
+    return tempArray;
+  };
 
   useEffect(() => {
     if (isError) {
@@ -28,10 +54,12 @@ export default function MenuItemList() {
       return;
     }
 
-    if (!isLoading) {
+    //เปลี่ยนเป็น data เมื่อเกิด CRUD ทำการปรับข้อมูลให้เป็นปัจจุบัน
+    if (data && data.result) {
       dispatch(setMenuItem(data.result));
+      setMenuItems(data.result);
     }
-  }, [isLoading]);
+  }, [data]);
 
   if (isLoading) {
     return <MainLoader />;
@@ -73,7 +101,7 @@ export default function MenuItemList() {
       {message && <FormDialog message={message} />}
       <FlatList
         ref={flatListRef}
-        data={data?.result}
+        data={menuItems}
         numColumns={2}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MenuItemCard menuItem={item} />}
@@ -81,7 +109,7 @@ export default function MenuItemList() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
       <FloatingAction
-        distanceToEdge={{ vertical: 20, horizontal: 20 }}
+        distanceToEdge={{ vertical: 80, horizontal: 20 }}
         actions={actions}
         onPressItem={(name) => {
           if (name === "bt_go_to_top") {

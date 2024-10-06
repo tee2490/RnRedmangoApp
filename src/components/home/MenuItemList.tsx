@@ -12,6 +12,7 @@ import { useGetMenuItemsQuery } from "../../redux/apis/menuItemApi";
 import { setMenuItem } from "../../redux/menuItemSlice";
 import { FormDialog } from "../../ui";
 import { RootState } from "../../redux/store";
+import { MenuCategoryList } from "../menu";
 
 export default function MenuItemList() {
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
@@ -97,30 +98,35 @@ export default function MenuItemList() {
   };
 
   return (
-    <View style={styles.container}>
-      {message && <FormDialog message={message} />}
-      <FlatList
-        ref={flatListRef}
-        data={menuItems}
-        numColumns={2}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <MenuItemCard menuItem={item} />}
-        contentContainerStyle={styles.container}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
-      <FloatingAction
-        distanceToEdge={{ vertical: 80, horizontal: 20 }}
-        actions={actions}
-        onPressItem={(name) => {
-          if (name === "bt_go_to_top") {
-            scrollToTop();
-          }
+    <View style={{ flex: 1 }}>
+      <View style={styles.categoryContainer}>
+        <MenuCategoryList />
+      </View>
+      <View style={styles.container}>
+        {message && <FormDialog message={message} />}
+        <FlatList
+          ref={flatListRef}
+          data={menuItems}
+          numColumns={2}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <MenuItemCard menuItem={item} />}
+          contentContainerStyle={styles.container}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+        <FloatingAction
+          distanceToEdge={{ vertical: 80, horizontal: 20 }}
+          actions={actions}
+          onPressItem={(name) => {
+            if (name === "bt_go_to_top") {
+              scrollToTop();
+            }
 
-          if (name === "bt_scroll") {
-            scrollToBottom();
-          }
-        }}
-      />
+            if (name === "bt_scroll") {
+              scrollToBottom();
+            }
+          }}
+        />
+      </View>
     </View>
   );
 }

@@ -15,6 +15,7 @@ import { RootState } from "../../redux/store";
 import { MenuCategoryList } from "../menu";
 
 export default function MenuItemList() {
+  const [categoryList, setCategoryList] = useState([""]);
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const dispatch = useDispatch();
@@ -59,6 +60,15 @@ export default function MenuItemList() {
     if (data && data.result) {
       dispatch(setMenuItem(data.result));
       setMenuItems(data.result);
+
+      //อ่านเฉพาะประเภทสินค้ามาเก็บไว้
+      const tempCategoryList = ["All"];
+      data.result.forEach((item: menuItemModel) => {
+        if (tempCategoryList.indexOf(item.category) === -1) {
+          tempCategoryList.push(item.category);
+        }
+      });
+      setCategoryList(tempCategoryList);
     }
   }, [data]);
 
@@ -100,7 +110,7 @@ export default function MenuItemList() {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.categoryContainer}>
-        <MenuCategoryList />
+        <MenuCategoryList categoryList={categoryList} />
       </View>
       <View style={styles.container}>
         {message && <FormDialog message={message} />}

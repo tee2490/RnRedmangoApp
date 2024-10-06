@@ -4,23 +4,12 @@ import { COLORS, SIZES } from "../../common";
 import { SD_Categories } from "../../common/SD";
 
 interface Props {
-  categoryList?: string[];
+  categoryList: string[];
 }
-
-const categoryTest = [
-  SD_Categories.APPETIZER,
-  SD_Categories.ENTREE,
-  SD_Categories.DESSERT,
-  SD_Categories.BEVERAGES,
-  "Test1",
-  "Test2",
-  "Test3",
-  "Test4",
-];
 
 const LIST_ITEM_SIZE = 60;
 
-const MenuCategoryList: FC<Props> = ({ categoryList = categoryTest }) => {
+const MenuCategoryList: FC<Props> = ({ categoryList }) => {
   const [selectedColor, setSelectedColor] = useState<string>(
     SD_Categories.APPETIZER
   );

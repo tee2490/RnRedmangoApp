@@ -20,10 +20,23 @@ const filterOptions = [
 ];
 
 export default function AllOrderScreen() {
-  const { data, isLoading } = useGetAllOrdersQuery("");
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [filters, setFilters] = useState({ searchString: "", status: "" });
   const [orderData, setOrderData] = useState<orderHeaderModel[]>([]);
+
+  //region สำหรับส่งไปยัง backend
+  const [apiFilters, setApiFilters] = useState({
+    searchString: "",
+    status: "",
+  });
+
+  const { data, isLoading } = useGetAllOrdersQuery({
+    ...(apiFilters && {
+      searchString: apiFilters.searchString,
+      status: apiFilters.status,
+    }),
+  });
+  //end region สำหรับส่งไปยัง backend
 
   const handleChange = (name: string) => (text: string) => {
     setFilters({ ...filters, [name]: text });
@@ -31,24 +44,12 @@ export default function AllOrderScreen() {
   };
 
   const handleFilters = () => {
-    const key = filters.searchString.toUpperCase();
-    const tempData = data.result.filter((orderData: orderHeaderModel) => {
-      if (
-        (orderData.pickupName &&
-          orderData.pickupName.toUpperCase().includes(key)) ||
-        (orderData.pickupEmail &&
-          orderData.pickupEmail.toUpperCase().includes(key)) ||
-        (orderData.pickupPhoneNumber &&
-          orderData.pickupPhoneNumber.toUpperCase().includes(key))
-      ) {
-        return orderData;
-      }
+    //เมื่อสเตทเปลี่ยนจะไปเรียก useGetAllOrdersQuery()
+    //กรณีประเภทเป็น All กำหนดให้เป็นค่าว่าง เพื่อให้ตรงกับฝั่ง backend
+    setApiFilters({
+      searchString: filters.searchString ,
+      status: filters.status === "All" ? "" :filters.status,
     });
-
-    const finalArray = tempData.filter((orderData: orderHeaderModel) =>
-      filters.status !== "All" ? orderData.status === filters.status : orderData
-    );
-    setOrderData(finalArray);
   };
 
   useEffect(() => {

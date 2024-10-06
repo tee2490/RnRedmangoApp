@@ -16,6 +16,7 @@ import { MenuCategoryList } from "../menu";
 import { SD_SortTypes } from "../../common/SD";
 
 export default function MenuItemList() {
+  const [fetching, setFetching] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [categoryList, setCategoryList] = useState([""]);
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
@@ -27,6 +28,15 @@ export default function MenuItemList() {
     (state: RootState) => state.menuItemStore.search
   );
   const sortValue = useSelector((state: RootState) => state.menuItemStore.sort);
+
+  //ให้ทำเมื่อมีข้อมูล และประเภทเป็น All
+  const onRefreshData = () => {
+    setFetching(true);
+    if (data && selectedCategory === "All") {
+      setMenuItems(data.result);
+    }
+    setFetching(false);
+  };
 
   //เมื่อเลือกประเภท หรือ คำค้น ให้ทำการกรองข้อมูลใหม่
   useEffect(() => {
@@ -158,6 +168,8 @@ export default function MenuItemList() {
         {message && <FormDialog message={message} />}
         <FlatList
           ref={flatListRef}
+          refreshing={fetching}
+          onRefresh={onRefreshData}
           data={menuItems}
           numColumns={2}
           keyExtractor={(item) => item.id.toString()}

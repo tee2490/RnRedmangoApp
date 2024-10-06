@@ -1,7 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
 import { MenuItemList } from "../components/home";
-import { MenuSearchBar } from "../components/menu";
+import { MenuSearchBar, MenuSort } from "../components/menu";
 import { COLORS, SIZES } from "../common";
 
 export default function HomeScreen() {
@@ -9,6 +9,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <MenuSearchBar />
+        <MenuSort/>
       </View>
       <MenuItemList />
     </View>

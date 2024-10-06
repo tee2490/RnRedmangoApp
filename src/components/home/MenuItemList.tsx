@@ -13,6 +13,7 @@ import { setMenuItem } from "../../redux/menuItemSlice";
 import { FormDialog } from "../../ui";
 import { RootState } from "../../redux/store";
 import { MenuCategoryList } from "../menu";
+import { SD_SortTypes } from "../../common/SD";
 
 export default function MenuItemList() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -25,16 +26,25 @@ export default function MenuItemList() {
   const searchValue = useSelector(
     (state: RootState) => state.menuItemStore.search
   );
+  const sortValue = useSelector((state: RootState) => state.menuItemStore.sort);
 
   //เมื่อเลือกประเภท หรือ คำค้น ให้ทำการกรองข้อมูลใหม่
   useEffect(() => {
     if (data && data.result) {
-      const tempMenuArray = handleFilters(searchValue, selectedCategory);
+      const tempMenuArray = handleFilters(
+        searchValue,
+        selectedCategory,
+        sortValue
+      );
       setMenuItems(tempMenuArray);
     }
-  }, [searchValue, selectedCategory]);
+  }, [searchValue, selectedCategory, sortValue]);
 
-  const handleFilters = (search: string, category: string) => {
+  const handleFilters = (
+    search: string,
+    category: string,
+    sortType: SD_SortTypes
+  ) => {
     let tempArray =
       category === "All"
         ? [...data.result]
@@ -48,6 +58,28 @@ export default function MenuItemList() {
       const tempSearchMenuItems = [...tempArray];
       tempArray = tempSearchMenuItems.filter((item: menuItemModel) =>
         item.name.toUpperCase().includes(search.toUpperCase())
+      );
+    }
+
+    //sort
+    if (sortType === SD_SortTypes.PRICE_LOW_HIGH) {
+      tempArray.sort((a: menuItemModel, b: menuItemModel) => a.price - b.price);
+    }
+    if (sortType === SD_SortTypes.PRICE_HIGH_LOW) {
+      tempArray.sort((a: menuItemModel, b: menuItemModel) => b.price - a.price);
+    }
+    if (sortType === SD_SortTypes.NAME_A_Z) {
+      tempArray.sort(
+        (a: menuItemModel, b: menuItemModel) =>
+          a.name.toUpperCase().charCodeAt(0) -
+          b.name.toUpperCase().charCodeAt(0)
+      );
+    }
+    if (sortType === SD_SortTypes.NAME_Z_A) {
+      tempArray.sort(
+        (a: menuItemModel, b: menuItemModel) =>
+          b.name.toUpperCase().charCodeAt(0) -
+          a.name.toUpperCase().charCodeAt(0)
       );
     }
 

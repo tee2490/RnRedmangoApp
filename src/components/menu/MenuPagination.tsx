@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SD_PerPage } from "../../common/SD";
 import RNPickerSelect from "react-native-picker-select";
 import { COLORS, SIZES } from "../../common";
@@ -13,25 +13,32 @@ const SortTypes = [
   { label: SD_PerPage.PERPAGE4, value: SD_PerPage.PERPAGE4 },
 ];
 
-const items = [...Array(31)].map((_, i) => i);
-const TotalRecords = items.length;
+interface Props {
+  TotalRecords: number;
+  onSetPagination(pageSize: number, pageNumber: number): void;
+}
 
-export default function MenuPagination() {
+export default function MenuPagination({ TotalRecords, onSetPagination }: Props) {
   const [page, setPage] = useState(0);
   const [numberOfItemsPerPage, onItemsPerPageChange] = useState(
-    parseInt(SD_PerPage.PERPAGE1)
-  );
+    parseInt(SD_PerPage.PERPAGE0)
+  );//จำนวนแถวต่อหน้า
 
   const from = page * numberOfItemsPerPage;
-  const to = Math.min((page + 1) * numberOfItemsPerPage, items.length);
+  const to = Math.min((page + 1) * numberOfItemsPerPage,TotalRecords);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPage(0);
   }, [numberOfItemsPerPage]);
 
   const handleChange = (text: number) => {
     onItemsPerPageChange(text);
   };
+
+  useEffect(() => {
+    //page+1 เนื่องจาก backend ตั้งค่าหน้าแรกเท่ากับ 1
+    onSetPagination(page + 1, numberOfItemsPerPage);
+  }, [page, numberOfItemsPerPage]);
 
   return (
     <View style={styles.container}>

@@ -23,8 +23,8 @@ const filterOptions = [
 export default function AllOrderScreen() {
   const [totalRecords, setTotalRecords] = useState(0);
   const [pageOptions, setPageOptions] = useState({
-    pageNumber: 1,
-    pageSize: 5,
+    page: 1,
+    numberOfItemsPerPage: 5,
   });
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [filters, setFilters] = useState({ searchString: "", status: "" });
@@ -40,6 +40,8 @@ export default function AllOrderScreen() {
     ...(apiFilters && {
       searchString: apiFilters.searchString,
       status: apiFilters.status,
+      pageNumber: pageOptions.page,
+      pageSize: pageOptions.numberOfItemsPerPage,
     }),
   });
   //end region สำหรับส่งไปยัง backend
@@ -53,8 +55,8 @@ export default function AllOrderScreen() {
     //เมื่อสเตทเปลี่ยนจะไปเรียก useGetAllOrdersQuery()
     //กรณีประเภทเป็น All กำหนดให้เป็นค่าว่าง เพื่อให้ตรงกับฝั่ง backend
     setApiFilters({
-      searchString: filters.searchString ,
-      status: filters.status === "All" ? "" :filters.status,
+      searchString: filters.searchString,
+      status: filters.status === "All" ? "" : filters.status,
     });
   };
 
@@ -105,6 +107,11 @@ export default function AllOrderScreen() {
     </View>
   );
 
+  const onSetPagination = (page: number, numberOfItemsPerPage: number) => {
+    //เมื่อสเตทเปลี่ยนจะไปเรียก useGetAllOrdersQuery() ออโต้
+    setPageOptions({ page, numberOfItemsPerPage });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleRow}>
@@ -120,7 +127,12 @@ export default function AllOrderScreen() {
 
       {!isLoading && (
         <FlatList
-          ListHeaderComponent={MenuPagination}
+          ListHeaderComponent={
+            <MenuPagination
+              TotalRecords={totalRecords}
+              onSetPagination={onSetPagination}
+            />
+          }
           contentContainerStyle={{ paddingBottom: 120 }}
           data={orderData}
           keyExtractor={(_, index) => index.toString()}

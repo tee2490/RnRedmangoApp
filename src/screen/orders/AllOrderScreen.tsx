@@ -1,16 +1,70 @@
-import { View, Text, FlatList } from "react-native";
-import React from "react";
+import { View, Text, FlatList, StyleSheet, TextInput } from "react-native";
+import React, { useState } from "react";
 import { useGetAllOrdersQuery } from "../../redux/apis/orderApi";
 import styles from "./MyOrderScreen.style";
-import { BackBtn1 } from "../../ui";
+import { BackBtn1, FormButton1 } from "../../ui";
 import { RootStackParamList } from "../../navigates/typeRootStack";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { MainLoader } from "../../common";
+import { COLORS, MainLoader } from "../../common";
 import { OrderCard } from "../../components/order";
+import { SD_Status } from "../../common/SD";
+import RNPickerSelect from "react-native-picker-select";
+
+const filterOptions = [
+  { label: "All", value: "All" },
+  { label: SD_Status.CONFIRMED, value: SD_Status.CONFIRMED },
+  { label: SD_Status.BEING_COOKED, value: SD_Status.BEING_COOKED },
+  { label: SD_Status.READY_FOR_PICKUP, value: SD_Status.READY_FOR_PICKUP },
+  { label: SD_Status.CANCELLED, value: SD_Status.CANCELLED },
+];
 
 export default function AllOrderScreen() {
   const { data, isLoading } = useGetAllOrdersQuery("");
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+  const [filters, setFilters] = useState({ searchString: "", status: "" });
+
+  const handleChange = (name: string) => (text: string) => {
+    setFilters({ ...filters, [name]: text });
+    console.log(filters);
+  };
+
+  const FilterOrder = (
+    <View style={filterStyles.filterContainer}>
+      <View style={filterStyles.filterContainer1}>
+        <TextInput
+          style={filterStyles.input}
+          placeholder="name, email or phone"
+          value={filters.searchString}
+          onChangeText={handleChange("searchString")}
+        />
+      </View>
+      <View style={filterStyles.filterContainer1}>
+        <RNPickerSelect
+          style={{
+            inputAndroid: filterStyles.inputAndroid,
+            viewContainer: filterStyles.pickerContainer,
+          }}
+          value={filters.status}
+          onValueChange={handleChange("status")}
+          items={filterOptions}
+          placeholder={{ label: "Status Select...", value: null }}
+        />
+      </View>
+      <View
+        style={{
+          marginTop: -12,
+          borderRadius: 2,
+        }}
+      >
+        <FormButton1
+          height={40}
+          title="filter"
+          isValid={true}
+          color={COLORS.info}
+        />
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -22,6 +76,8 @@ export default function AllOrderScreen() {
       </View>
 
       {isLoading && <MainLoader />}
+
+      {FilterOrder}
 
       {!isLoading && (
         <FlatList
@@ -36,3 +92,35 @@ export default function AllOrderScreen() {
     </View>
   );
 }
+
+const filterStyles = StyleSheet.create({
+  inputAndroid: {
+    color: COLORS.primary,
+    marginHorizontal: -10,
+    marginVertical: -5,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.primary2,
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterContainer1: {
+    paddingHorizontal: 2,
+    flex: 1,
+    borderRadius: 5,
+  },
+  input: {
+    width: "100%",
+    padding: 8,
+    borderRadius: 5,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+});

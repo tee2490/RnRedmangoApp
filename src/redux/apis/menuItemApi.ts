@@ -1,10 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseUrlAPI } from "../../common/SD";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const menuItemApi = createApi({
   reducerPath: "menuItemApi",
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrlAPI,
+    prepareHeaders: async (headers: Headers, api) => {
+      const token = await AsyncStorage.getItem("token");
+      token && headers.append("Authorization", "Bearer " + token);
+    },
   }),
   tagTypes: ["MenuItems"],
   endpoints: (builder) => ({

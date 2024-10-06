@@ -20,7 +20,7 @@ export default function MyOrderScreen() {
       <View style={styles.titleRow}>
         <BackBtn1 onPress={() => navigate("ProfileScreen")} />
         <Text style={styles.titletxt}>
-          Orders ({!isLoading && data.result.length} items)
+          Orders ({!isLoading && data?.apiResponse.result.length} items)
         </Text>
       </View>
 
@@ -30,7 +30,7 @@ export default function MyOrderScreen() {
         <FlatList
           contentContainerStyle={{ paddingBottom: 60 }}
           showsVerticalScrollIndicator={false}
-          data={data.result}
+          data={data?.apiResponse.result}
           renderItem={({ item }) => (
             <OrderCard
               key={item.orderHeaderId.toString()}

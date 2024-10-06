@@ -12,7 +12,7 @@ import { OrderCard } from "../../components/order";
 
 export default function MyOrderScreen() {
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
-  const { data, isLoading } = useGetAllOrdersQuery(userId);
+  const { data, isLoading } = useGetAllOrdersQuery({userId});
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (

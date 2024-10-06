@@ -5,17 +5,19 @@ import { SD_Categories } from "../../common/SD";
 
 interface Props {
   categoryList: string[];
+  setSelectedCategory(category: string): void;
 }
 
 const LIST_ITEM_SIZE = 60;
 
-const MenuCategoryList: FC<Props> = ({ categoryList }) => {
+const MenuCategoryList: FC<Props> = ({ categoryList, setSelectedCategory }) => {
   const [selectedColor, setSelectedColor] = useState<string>(
     SD_Categories.APPETIZER
   );
 
   const onSelect = (category: string) => {
     setSelectedColor(category);
+    setSelectedCategory(category);
   };
 
   return (

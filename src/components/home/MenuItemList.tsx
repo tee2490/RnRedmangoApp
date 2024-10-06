@@ -15,6 +15,7 @@ import { RootState } from "../../redux/store";
 import { MenuCategoryList } from "../menu";
 
 export default function MenuItemList() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [categoryList, setCategoryList] = useState([""]);
   const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
   const flatListRef = useRef<FlatList>(null);
@@ -28,13 +29,19 @@ export default function MenuItemList() {
   //เมื่อเลือกประเภท หรือ คำค้น ให้ทำการกรองข้อมูลใหม่
   useEffect(() => {
     if (data && data.result) {
-      const tempMenuArray = handleFilters(searchValue);
+      const tempMenuArray = handleFilters(searchValue, selectedCategory);
       setMenuItems(tempMenuArray);
     }
-  }, [searchValue]);
+  }, [searchValue, selectedCategory]);
 
-  const handleFilters = (search: string) => {
-    let tempArray = [...data.result];
+  const handleFilters = (search: string, category: string) => {
+    let tempArray =
+      category === "All"
+        ? [...data.result]
+        : data.result.filter(
+            (item: menuItemModel) =>
+              item.category.toUpperCase() === category.toUpperCase()
+          );
 
     //search functionality
     if (search) {
@@ -110,7 +117,10 @@ export default function MenuItemList() {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.categoryContainer}>
-        <MenuCategoryList categoryList={categoryList} />
+        <MenuCategoryList
+          categoryList={categoryList}
+          setSelectedCategory={setSelectedCategory}
+        />
       </View>
       <View style={styles.container}>
         {message && <FormDialog message={message} />}
